@@ -12,7 +12,6 @@ library(vegan)
 library(styler) # pretty script
 library(ggrepel) # nice labels
 library(viridis) # nice palettes
-#library(ggplotify) # convert plots in ggplot2 objects
 
 #### Data transformations ####
 
@@ -51,7 +50,7 @@ matched_species_NAs <- accepted_species_values |>
   (\(df) df |> mutate(Na_values = rowSums(is.na(df))))() |>
   arrange(desc(Na_values))
 
-#### Building a "community" matrix ####
+#### Building a community matrix ####
 
 # In order to measure the concordance between the different packages, we'll start
 # building a "community" matrix that we will subsequently use for the calculation
@@ -126,8 +125,6 @@ nmds_coords_noout <- as.data.frame(matches_MDS1_noout$points)
 
 nmds_coords_noout$ID <- rownames(matches_matrix_noout)
 
-# mypal <- viridis_pal(option = "turbo", begin = 0, end = 0.8)(nrow(matches_matrix_noout))
-
 nmds_plot <- ggplot(nmds_coords_noout, aes(x = MDS1, y = MDS2, label = ID)) +
   geom_point(size = 2, shape = 21, alpha = 0.3, fill = "black") +
   #geom_jitter(size = 4, shape = 21, stroke = 1, width = 0.001, height = 0.001) +
@@ -136,7 +133,7 @@ nmds_plot <- ggplot(nmds_coords_noout, aes(x = MDS1, y = MDS2, label = ID)) +
   #scale_color_viridis_d(option = "turbo", begin = 0, end = 0.8) +
   theme_minimal()
 
-nmds_plot
+nmds_plot # Fig. 3
 # ggsave("./data/output/nmds_plot.png", dpi = 320)
 
 #### Intersection plot ####
@@ -154,8 +151,6 @@ intersect_plot <- upset(matches_matrix_t, # data matrix
                       order.by = "freq", # order of intersection bars
                       text.scale = 1.2,
                       sets.bar.color = mypal
-                      ) 
+                      )
 
-# intersect_plot <- as.ggplot(intersect_plot)
-
-intersect_plot
+intersect_plot # Fig. 4
