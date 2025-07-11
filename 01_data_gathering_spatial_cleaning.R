@@ -28,7 +28,7 @@ library(styler) # pretty scripts
 
 #### DATA GATHERING ####
 
-# Download GBIF data
+# Download GBIF data (after setting up a GBIF account on https://www.gbif.org)
 
 #  gbif_it <- occ_download(
 #    pred_in("basisOfRecord", c("OBSERVATION", "HUMAN_OBSERVATION")),
@@ -40,7 +40,7 @@ library(styler) # pretty scripts
 #    pred_gte("coordinateUncertaintyInMeters", 0),
 #    pred_lte("coordinateUncertaintyInMeters", 5000),
 #    format = "SIMPLE_CSV",
-#    user = "diletta.santovito", pwd = "dilettaGBIF47@!", email = "diletta.santovito2@unibo.it"
+#    user = "your_username", pwd = "your_password", email = "your_email@example.com"
 # )
 #
 # gbif_status <- occ_download_wait(gbif_it[1])
@@ -64,7 +64,7 @@ gbif_it <- read.csv("./data/occurrences/gbif_it.csv", header = TRUE)
 bien_it <- read.csv("./data/occurrences/bien_it.csv", header = TRUE)
 
 # Modify the BIEN dataset to make it more similar to the GBIF dataset and remove
-# records with no species name, longitutde and latitude
+# records with no species name, longitude and latitude
 
 bien_it <- bien_it |>
   filter(date_collected >= "1950-01-01") |>
@@ -182,7 +182,7 @@ gbif_hex_plot <- ggplot() +
     plot.title = element_text(hjust = 0.5, face = "bold")
   )
 
-# Arrange the plots side by side for comparison
+# Arrange the plots side by side for comparison (Fig. 1)
 
 combined_plot <- ggarrange(bien_hex_plot, gbif_hex_plot,
   ncol = 2, nrow = 1,
@@ -340,15 +340,15 @@ combined_plot_occ <- ggarrange(flag_hex_plot, no_flag_hex_plot,
   legend = "right"
 )
 
-# Display the combined plot
+# Display the combined plot (Fig. 2)
 
 print(combined_plot_occ)
 
-ggarrange(bien_hex_plot, gbif_hex_plot,
-  flag_hex_plot, no_flag_hex_plot,
-  ncol = 2, nrow = 2,
-  legend = "bottom"
-)
+# ggarrange(bien_hex_plot, gbif_hex_plot,
+#   flag_hex_plot, no_flag_hex_plot,
+#   ncol = 2, nrow = 2,
+#   legend = "bottom"
+# )
 
 dev.off()
 
@@ -373,4 +373,4 @@ occ_clean <- occurrences_flags |>
 
 # Saving the final dataset to .csv
 
-write.csv(occ_clean, "./data/occurrences/occ_clean.csv", row.names = FALSE)
+# write.csv(occ_clean, "./data/occurrences/occ_clean.csv", row.names = FALSE)
