@@ -27,7 +27,7 @@ occ_clean <- occ_clean |>
 unique_species <- occ_clean |>
   distinct(Input_species)
 
-# Saving the data in .csv format for later
+# Saving the data in .csv format
 
 # write.csv(unique_species, file = "./data/occurrences/unique_species.csv", row.names = F)
 
@@ -160,32 +160,6 @@ wcvp_accepted_species <- wcvp_species |>
 
 wcvp_accepted_species_short <- wcvp_accepted_species |>
   select(Input_species, wcvp_name)
-
-# Here I'm trying to follow the example workflow illustrated on
-# https://matildabrown.github.io/rWCVP/articles/redlist-name-matching.html
-
-# Linking accepted names to WCVP data
-
-# wcvp_accepted_species <- wcvp_species %>%
-#  left_join(rWCVPdata::wcvp_names, by = c("wcvp_accepted_id" = "plant_name_id")) |>
-#  mutate(keep = case_when(
-#    taxon_status == "Accepted" & (wcvp_status != "Synonym" | wcvp_homotypic) ~
-#      "Matched to an accepted name",
-#    TRUE ~ "Not matched to an accepted name"
-#  ))
-
-# count(wcvp_accepted_species, keep)
-
-# NB: this passage is pretty useless, I could have just filtered Accepted species
-# from the output of the wcvp_match_names function
-
-# wcvp_final_matches <- wcvp_accepted_species |>
-#  filter(keep == "Matched to an accepted name") |>
-#  select(Input_species, wcvp_authors,
-#         match_name = wcvp_name, match_status = wcvp_status,
-#         accepted_plant_name_id = wcvp_accepted_id, ipni_id,
-#         accepted_taxon_name = taxon_name, accepted_taxon_authors = taxon_authors) |>
-#  filter(match_status == "Accepted")
 
 #### taxadb ####
 
@@ -321,52 +295,49 @@ view_taxa_authorities() # taxa authorities recognized by taxonomyCleanr
 # use_tropicos() # this function is via the taxize package
 # TROPICOS_KEY: "your_tropicos_key"
 
-tropicoskey <- "f2424dd5-e742-4034-9258-522f75516bf5"
+tropicoskey <- "your_tropicos_key"
 
 Sys.setenv(TROPICOS_KEY = tropicoskey)
 
 # taxonomycleanR
 
-# tc_sources <- c(3, 11, 165) # vector containing the codes associated with the
-# # authorities I need to standardize plant names
-#
-# tc_times <- vector(mode = "list", length = length(tc_sources))
-#
-# tc_names <- c("tc_itis", "tc_gbif", "tc_tropicos")
-#
-# names(tc_times) <- tc_names
-#
-# tc_species <- purrr::map2(tc_sources, tc_names, \(sources, names) # creating a loop to use this package
-#                           # core functions for every different chosen authority
-#                           {
-#                             tic()
-#
-#                             my_path <- tempdir()
-#
-#                             taxa_map <- create_taxa_map(path = my_path, x = unique_species, col = "Input_species")
-#
-#                             tc_count <- count_taxa(x = unique_species, col = "Input_species", path = my_path)
-#
-#                             tc_trim <- trim_taxa(path = my_path)
-#
-#                             tc_resolve <- resolve_sci_taxa(path = my_path, data.sources = sources)
-#
-#                             tc_times[[names]] <<- toc()
-#
-#                             return(tc_resolve)
-# }
-# )
-# beep(5)
-#
-# tc_species_accepted <- purrr::map(tc_species, \(x) x |>
-#                                     filter(!is.na(authority_id)) |>
-#                                     rename(Input_species = taxa_raw) |>
-#                                     select(Input_species, taxa_clean))
-#
-# names(tc_species_accepted) <- tc_names
+tc_sources <- c(3, 11, 165) # vector containing the codes associated with the
+# authorities I need to standardize plant names
 
-tc_species_accepted <- readRDS("./data/output/tc_species_accepted.RData")
-tc_times <- readRDS("./data/output/tc_times.RData")
+tc_times <- vector(mode = "list", length = length(tc_sources))
+
+tc_names <- c("tc_itis", "tc_gbif", "tc_tropicos")
+
+names(tc_times) <- tc_names
+
+tc_species <- purrr::map2(tc_sources, tc_names, \(sources, names) # creating a loop to use this package
+                          # core functions for every different chosen authority
+                          {
+                            tic()
+
+                            my_path <- tempdir()
+
+                            taxa_map <- create_taxa_map(path = my_path, x = unique_species, col = "Input_species")
+
+                            tc_count <- count_taxa(x = unique_species, col = "Input_species", path = my_path)
+
+                            tc_trim <- trim_taxa(path = my_path)
+
+                            tc_resolve <- resolve_sci_taxa(path = my_path, data.sources = sources)
+
+                            tc_times[[names]] <<- toc()
+
+                            return(tc_resolve)
+}
+)
+beep(5)
+
+tc_species_accepted <- purrr::map(tc_species, \(x) x |>
+                                    filter(!is.na(authority_id)) |>
+                                    rename(Input_species = taxa_raw) |>
+                                    select(Input_species, taxa_clean))
+
+names(tc_species_accepted) <- tc_names
 
 list2env(tc_species_accepted, .GlobalEnv)
 
@@ -616,18 +587,13 @@ wfo_classification <- read.table("./data/taxonomy/wfo_classification.csv",
 
 # Match the species list with WorldFlora classification
 
-# tic()
-#
-# wfo_species <- WFO.match(unique_species$Input_species, WFO.data = wfo_classification)
-#
-# wfo_time <- toc()
-#
-# beep(5)
+tic()
 
-# Since WorldFlora takes lots of time for matching, consider running it again
-# using parallel
+wfo_species <- WFO.match(unique_species$Input_species, WFO.data = wfo_classification)
 
-wfo_species <- readRDS("./data/output/wfo_species.RData")
+wfo_time <- toc()
+
+beep(5)
 
 # Matching one-to-one
 
@@ -644,11 +610,6 @@ wfo_species_short <- wfo_species_one |>
 
 wfo_unmatched <- wfo_species_short |> 
   filter(is.na(Output_species))
-
-poa <- c("Poa angustifolia", "Poa compressa", "Poa nemoralis", "Poa palustris")
-wfo_poa <- WFO.match(poa, WFO.data = wfo_classification)
-
-poa_one <- WFO.one(wfo_poa, priority = "Synonym")
 
 # In order: removed '"' in the df, converted NAs in blank spaces to avoid the
 # conversion of NAs in characters, converted blanks spaces in NAs again
@@ -674,4 +635,4 @@ colnames(accepted_species) <- c(
 
 # Save the output in .csv format
 
-write.csv(accepted_species, "./data/output/accepted_species.csv", row.names = FALSE)
+# write.csv(accepted_species, "./data/output/accepted_species.csv", row.names = FALSE)
