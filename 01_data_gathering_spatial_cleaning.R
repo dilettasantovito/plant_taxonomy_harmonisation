@@ -28,6 +28,13 @@ library(styler) # pretty scripts
 
 #### DATA GATHERING ####
 
+# Download BIEN data
+
+# bien_it <- BIEN_occurrence_country("Italy")
+# beep(5)
+#
+# write.csv(bien_it, file = "./data/occurrences/bien_it.csv", row.names = FALSE)
+
 # Download GBIF data (after setting up a GBIF account on https://www.gbif.org)
 
 #  gbif_it <- occ_download(
@@ -51,17 +58,13 @@ library(styler) # pretty scripts
 #
 # write.csv(gbif_it, file = "./data/occurrences/gbif_it.csv", row.names = FALSE)
 
-# Download BIEN data
-
-# bien_it <- BIEN_occurrence_country("Italy")
-# beep(5)
-#
-# write.csv(bien_it, file = "./data/occurrences/bien_it.csv", row.names = FALSE)
-
 # Data downloaded in January 2025
 
-gbif_it <- read.csv("./data/occurrences/gbif_it.csv", header = TRUE)
-bien_it <- read.csv("./data/occurrences/bien_it.csv", header = TRUE)
+# gbif_it <- read.csv("./data/occurrences/gbif_it.csv", header = TRUE)
+# bien_it <- read.csv("./data/occurrences/bien_it.csv", header = TRUE)
+
+# Link to data downloaded from BIEN: https://zenodo.org/records/16317606?token=eyJhbGciOiJIUzUxMiIsImlhdCI6MTc1MzE5MTAxOSwiZXhwIjoxNzg0Njc4Mzk5fQ.eyJpZCI6ImU3YzEwYmI3LTI0MjUtNDMyOC1iYTcwLTFjMWI0MjI4OTkzZCIsImRhdGEiOnt9LCJyYW5kb20iOiI2MWMwZTI3NjIwOWE1NjU1MjRlODhmZjk3ZTdhODdmZCJ9.HTDvZW8B4bf3AvMInWZ91SLPBPleh0HeF_RNP55c0pr4tWLJvfDfz1l3WcK_fLAmnbzPk6NS_eSNffilPcfNtA
+# Link to data downloaded from GBIF: https://www.gbif.org/occurrence/download/0001127-250121130708018
 
 # Modify the BIEN dataset to make it more similar to the GBIF dataset and remove
 # records with no species name, longitude and latitude
