@@ -4,6 +4,7 @@
 
 # Data manipulation and visualisation
 library(tidyverse)
+library(UpSetR) # intersection plots
 
 # Data analysis
 library(vegan) 
@@ -12,6 +13,7 @@ library(vegan)
 library(styler) # pretty script
 library(ggrepel) # nice labels
 library(viridis) # nice palettes
+
 
 #### Data transformations ####
 
@@ -134,11 +136,8 @@ nmds_plot <- ggplot(nmds_coords_noout, aes(x = MDS1, y = MDS2, label = ID)) +
   theme_minimal()
 
 nmds_plot # Fig. 3
-# ggsave("./data/output/nmds_plot.png", dpi = 320)
 
 #### Intersection plot ####
-
-library(UpSetR) # intersection plots
 
 # Creating an intersection plot
 

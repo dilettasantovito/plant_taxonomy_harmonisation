@@ -101,8 +101,6 @@ lcvp_notmatched_short <- lcvp_notmatched |>
 
 # lcvp_fuzzy <- lcvp_fuzzy_search(unique_species$species) # to know every possible match
 
-# N.B: decide wether to keep the 'unresolved' names
-
 #### rWCVP ####
 
 # rWCVP is a package designed to make some common tasks that use WCVP easier,
