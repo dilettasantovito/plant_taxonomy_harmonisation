@@ -63,8 +63,8 @@ library(styler) # pretty scripts
 # gbif_it <- read.csv("./data/occurrences/gbif_it.csv", header = TRUE)
 # bien_it <- read.csv("./data/occurrences/bien_it.csv", header = TRUE)
 
-# Link to data downloaded from BIEN: https://zenodo.org/records/16317606?token=eyJhbGciOiJIUzUxMiIsImlhdCI6MTc1MzE5MTAxOSwiZXhwIjoxNzg0Njc4Mzk5fQ.eyJpZCI6ImU3YzEwYmI3LTI0MjUtNDMyOC1iYTcwLTFjMWI0MjI4OTkzZCIsImRhdGEiOnt9LCJyYW5kb20iOiI2MWMwZTI3NjIwOWE1NjU1MjRlODhmZjk3ZTdhODdmZCJ9.HTDvZW8B4bf3AvMInWZ91SLPBPleh0HeF_RNP55c0pr4tWLJvfDfz1l3WcK_fLAmnbzPk6NS_eSNffilPcfNtA
-# Link to data downloaded from GBIF: https://www.gbif.org/occurrence/download/0001127-250121130708018
+# BIEN data: https://doi.org/10.5281/zenodo.16317606
+# GBIF data: https://doi.org/10.15468/dl.efd2p7
 
 # Modify the BIEN dataset to make it more similar to the GBIF dataset and remove
 # records with no species name, longitude and latitude
